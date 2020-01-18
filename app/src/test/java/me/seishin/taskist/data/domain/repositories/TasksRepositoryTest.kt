@@ -2,11 +2,11 @@ package me.seishin.taskist.data.domain.repositories
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.*
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.TestObserver
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subscribers.TestSubscriber
 import junit.framework.Assert.assertEquals
 import me.seishin.taskist.data.AppDatabase
@@ -25,7 +25,9 @@ class TasksRepositoryTest {
     private val dbMock: AppDatabase.Database = mock(AppDatabase.Database::class.java)
     private val taskDaoMock: TasksDao = mock(TasksDao::class.java)
 
-    private val SUT: TasksRepository = TasksRepositoryImpl(dbMock)
+    private val testScheduler: TestScheduler = TestScheduler()
+
+    private val SUT: TasksRepository = TasksRepositoryImpl(dbMock, testScheduler, testScheduler)
 
     @Before
     fun setUp() {
@@ -41,6 +43,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.getAllTasks()).thenReturn(Flowable.just(expectedList))
 
         SUT.getAllTasks().subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertValue(expectedList)
     }
@@ -53,6 +56,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.getAllTasks()).thenReturn(Flowable.error(expectedError))
 
         SUT.getAllTasks().subscribe(testSubscriber)
+        testScheduler.triggerActions()
 
         testSubscriber.assertError(expectedError)
     }
@@ -64,6 +68,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.getTask(anyInt())).thenReturn(Single.never())
 
         SUT.getTask(expectedId).subscribe()
+        testScheduler.triggerActions()
 
         argumentCaptor<Int>().apply {
             verify(taskDaoMock, times(1)).getTask(capture())
@@ -80,6 +85,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.getTask(anyInt())).thenReturn(Single.just(expectedTask))
 
         SUT.getTask(0).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertValue(expectedTask)
     }
@@ -93,6 +99,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.getTask(anyInt())).thenReturn(Single.error(expectedError))
 
         SUT.getTask(1).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertError(expectedError)
     }
@@ -105,6 +112,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.createTask(anyObj())).thenReturn(Completable.complete())
 
         SUT.createTask(expectedTask).subscribe()
+        testScheduler.triggerActions()
 
         argumentCaptor<Task>().apply {
             verify(taskDaoMock, times(1)).createTask(capture())
@@ -121,6 +129,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.createTask(anyObj())).thenReturn(Completable.complete())
 
         SUT.createTask(testTask).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertComplete()
     }
@@ -135,6 +144,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.createTask(anyObj())).thenReturn(Completable.error(expectedError))
 
         SUT.createTask(testTask).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertError(expectedError)
     }
@@ -146,6 +156,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Completable.complete())
 
         SUT.updateTask(expectedTask).subscribe()
+        testScheduler.triggerActions()
 
         argumentCaptor<Task>().apply {
             verify(taskDaoMock, times(1)).updateTask(capture())
@@ -162,6 +173,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Completable.complete())
 
         SUT.updateTask(testTask).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertComplete()
     }
@@ -176,6 +188,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Completable.error(expectedError))
 
         SUT.updateTask(testTask).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertError(expectedError)
     }
@@ -187,6 +200,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.empty())
 
         SUT.deleteTask(expectedTask).subscribe()
+        testScheduler.triggerActions()
 
         argumentCaptor<Task>().apply {
             verify(taskDaoMock, times(1)).deleteTask(capture())
@@ -204,6 +218,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.just(expectedResult))
 
         SUT.deleteTask(testTask).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertValue(expectedResult)
     }
@@ -218,6 +233,7 @@ class TasksRepositoryTest {
         `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.error(expectedError))
 
         SUT.deleteTask(testTask).subscribe(testObserver)
+        testScheduler.triggerActions()
 
         testObserver.assertError(expectedError)
     }
