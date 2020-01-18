@@ -1,11 +1,9 @@
-package me.seishin.taskist.data.domain.repositories
+package me.seishin.taskist.domain.repositories
 
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
 import io.reactivex.*
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.TestObserver
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subscribers.TestSubscriber
 import junit.framework.Assert.assertEquals
@@ -197,7 +195,7 @@ class TasksRepositoryTest {
     fun `deleteTask() correct task passed`() {
         val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
 
-        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.empty())
+        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Completable.complete())
 
         SUT.deleteTask(expectedTask).subscribe()
         testScheduler.triggerActions()
@@ -215,12 +213,12 @@ class TasksRepositoryTest {
         val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
         val expectedResult = 1
 
-        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.just(expectedResult))
+        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Completable.complete())
 
         SUT.deleteTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()
 
-        testObserver.assertValue(expectedResult)
+        testObserver.completions()
     }
 
     @Test
@@ -230,7 +228,7 @@ class TasksRepositoryTest {
         val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
         val expectedError = Throwable("Cannot delete the task!")
 
-        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.error(expectedError))
+        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Completable.error(expectedError))
 
         SUT.deleteTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()

@@ -23,7 +23,7 @@ interface TasksDao {
     fun updateTask(task: Task): Completable
 
     @Delete
-    fun deleteTask(task: Task): Maybe<Int>
+    fun deleteTask(task: Task): Completable
 
     @Query("SELECT * FROM table_tasks")
     fun getAllTasks(): Flowable<List<Task>>

@@ -1,8 +1,8 @@
-package me.seishin.taskist.data.domain.repositories
+package me.seishin.taskist.domain.repositories
 
 import io.reactivex.*
 import me.seishin.taskist.data.AppDatabase
-import me.seishin.taskist.data.common.Filter
+import me.seishin.taskist.common.Filter
 import me.seishin.taskist.data.entities.Task
 
 class TasksRepositoryImpl (
@@ -26,7 +26,7 @@ class TasksRepositoryImpl (
         return db.tasksDao().updateTask(task).subscribeOn(subscribeScheduler).observeOn(observeScheduler)
     }
 
-    override fun deleteTask(task: Task): Maybe<Int> {
+    override fun deleteTask(task: Task): Completable {
         return db.tasksDao().deleteTask(task).subscribeOn(subscribeScheduler).observeOn(observeScheduler)
     }
 

@@ -1,4 +1,4 @@
-package me.seishin.taskist.data.common
+package me.seishin.taskist.common
 
 enum class Filter {
     COMPLETED, RECENT, LATEST, RECENTLY_UPDATED
