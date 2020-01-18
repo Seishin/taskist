@@ -11,23 +11,23 @@ import me.seishin.taskist.data.entities.Task
 class TasksRepositoryImpl (private val db: AppDatabase.Database): TasksRepository {
 
     override fun getAllTasks(): Flowable<List<Task>> {
-        return Flowable.empty()
+        return db.tasksDao().getAllTasks()
     }
 
     override fun getTask(id: Int): Single<Task> {
-        return Single.never<Task>()
+        return db.tasksDao().getTask(id)
     }
 
     override fun createTask(task: Task): Completable {
-        return Completable.complete()
+        return db.tasksDao().createTask(task)
     }
 
     override fun updateTask(task: Task): Completable {
-        return Completable.complete()
+        return db.tasksDao().updateTask(task)
     }
 
     override fun deleteTask(task: Task): Maybe<Int> {
-        return Maybe.empty()
+        return db.tasksDao().deleteTask(task)
     }
 
     override fun filterTaskBy(filter: Filter): Flowable<List<Task>> {

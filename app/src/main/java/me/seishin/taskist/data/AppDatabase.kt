@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import me.seishin.taskist.data.daos.TasksDao
 import me.seishin.taskist.data.entities.Task
 
-class AppDatabase (private val context: Context) {
+class AppDatabase (context: Context) {
 
     @androidx.room.Database(entities = [Task::class], version = 1)
     abstract class Database: RoomDatabase() {
