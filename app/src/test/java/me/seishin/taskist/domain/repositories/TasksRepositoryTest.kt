@@ -36,7 +36,7 @@ class TasksRepositoryTest {
     fun `getAllTasks() Success`() {
         val testObserver = TestSubscriber<List<Task>>()
 
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedList = listOf(testTask)
         `when`(taskDaoMock.getAllTasks()).thenReturn(Flowable.just(expectedList))
 
@@ -78,7 +78,7 @@ class TasksRepositoryTest {
     fun `getTask() task return success`() {
         val testObserver = TestObserver<Task>()
 
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
         `when`(taskDaoMock.getTask(anyInt())).thenReturn(Single.just(expectedTask))
 
@@ -105,9 +105,9 @@ class TasksRepositoryTest {
     // createTask() correct task passed success
     @Test
     fun `createTask() correct task passed`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        `when`(taskDaoMock.createTask(anyObj())).thenReturn(Completable.complete())
+        `when`(taskDaoMock.createTask(anyObj())).thenReturn(Maybe.just(0))
 
         SUT.createTask(expectedTask).subscribe()
         testScheduler.triggerActions()
@@ -122,24 +122,25 @@ class TasksRepositoryTest {
     fun `createTask() success returned`() {
         val testObserver = TestObserver<Any>()
 
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
+        val expectedResult: Long = 0
 
-        `when`(taskDaoMock.createTask(anyObj())).thenReturn(Completable.complete())
+        `when`(taskDaoMock.createTask(anyObj())).thenReturn(Maybe.just(expectedResult))
 
         SUT.createTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()
 
-        testObserver.assertComplete()
+        testObserver.assertValue(expectedResult)
     }
 
     @Test
     fun `createTask() failure returned`() {
         val testObserver = TestObserver<Any>()
 
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedError = Throwable("Cannot update the task!")
 
-        `when`(taskDaoMock.createTask(anyObj())).thenReturn(Completable.error(expectedError))
+        `when`(taskDaoMock.createTask(anyObj())).thenReturn(Maybe.error(expectedError))
 
         SUT.createTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()
@@ -149,9 +150,9 @@ class TasksRepositoryTest {
 
     @Test
     fun `updateTask() correct task passed`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Completable.complete())
+        `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Maybe.just(0))
 
         SUT.updateTask(expectedTask).subscribe()
         testScheduler.triggerActions()
@@ -166,24 +167,25 @@ class TasksRepositoryTest {
     fun `updateTask() success returned`() {
         val testObserver = TestObserver<Any>()
 
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
+        val expectedResult = 0
 
-        `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Completable.complete())
+        `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Maybe.just(expectedResult))
 
         SUT.updateTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()
 
-        testObserver.assertComplete()
+        testObserver.assertValue(expectedResult)
     }
 
     @Test
     fun `updateTask() failure returned`() {
         val testObserver = TestObserver<Any>()
 
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedError = Throwable("Cannot update the task!")
 
-        `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Completable.error(expectedError))
+        `when`(taskDaoMock.updateTask(anyObj())).thenReturn(Maybe.error(expectedError))
 
         SUT.updateTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()
@@ -193,9 +195,8 @@ class TasksRepositoryTest {
 
     @Test
     fun `deleteTask() correct task passed`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
-
-        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Completable.complete())
+        val expectedTask = Task("Do homework", false)
+        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.just(0))
 
         SUT.deleteTask(expectedTask).subscribe()
         testScheduler.triggerActions()
@@ -210,25 +211,25 @@ class TasksRepositoryTest {
     fun `deleteTask() success returned`() {
         val testObserver = TestObserver<Int>()
 
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedResult = 1
 
-        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Completable.complete())
+        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.just(expectedResult))
 
         SUT.deleteTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()
 
-        testObserver.completions()
+        testObserver.assertValue(expectedResult)
     }
 
     @Test
     fun `deleteTask() failure returned`() {
         val testObserver = TestObserver<Any>()
 
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedError = Throwable("Cannot delete the task!")
 
-        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Completable.error(expectedError))
+        `when`(taskDaoMock.deleteTask(anyObj())).thenReturn(Maybe.error(expectedError))
 
         SUT.deleteTask(testTask).subscribe(testObserver)
         testScheduler.triggerActions()

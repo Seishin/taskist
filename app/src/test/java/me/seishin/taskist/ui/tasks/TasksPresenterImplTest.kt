@@ -3,6 +3,7 @@ package me.seishin.taskist.ui.tasks
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import me.seishin.taskist.data.entities.Task
 import me.seishin.taskist.domain.repositories.TasksRepository
@@ -22,7 +23,7 @@ class TasksPresenterImplTest {
 
     @Test
     fun `getAllTasks() success onTasksListObtained() called`() {
-        val task = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val task = Task("Do homework", false)
         val expectedArray = arrayListOf(task)
 
         whenever(mockRepository.getAllTasks()).thenReturn(Flowable.just(expectedArray))
@@ -69,12 +70,12 @@ class TasksPresenterImplTest {
     @Test
     fun `getTask() success onTaskObtained() called`() {
         val expectedTaskId = 0
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
-        expectedTask.id = expectedTaskId
+        val expectedTask = Task( "Do homework", false)
+        expectedTask.id = expectedTaskId.toLong()
 
         whenever(mockRepository.getTask(any())).thenReturn(Single.just(expectedTask))
 
-        SUT.getTask(expectedTaskId)
+        SUT.getTask(expectedTaskId.toInt())
 
         argumentCaptor<Int>().apply {
             verify(mockRepository, times(1)).getTask(capture())
@@ -105,9 +106,9 @@ class TasksPresenterImplTest {
 
     @Test
     fun `createTask() correct task passed`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        whenever(mockRepository.createTask(any())).thenReturn(Completable.complete())
+        whenever(mockRepository.createTask(any())).thenReturn(Maybe.just(0))
 
         SUT.createTask(expectedTask)
 
@@ -120,9 +121,9 @@ class TasksPresenterImplTest {
 
     @Test
     fun `createTask() success onTaskCreated() called`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        whenever(mockRepository.createTask(any())).thenReturn(Completable.complete())
+        whenever(mockRepository.createTask(any())).thenReturn(Maybe.just(0))
 
         SUT.createTask(expectedTask)
 
@@ -136,10 +137,10 @@ class TasksPresenterImplTest {
 
     @Test
     fun `createTask() failure onError() called`() {
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedErrorMessage = "Cannot create the task!"
 
-        whenever(mockRepository.createTask(any())).thenReturn(Completable.error(Throwable(expectedErrorMessage)))
+        whenever(mockRepository.createTask(any())).thenReturn(Maybe.error(Throwable(expectedErrorMessage)))
 
         SUT.createTask(testTask)
 
@@ -153,9 +154,9 @@ class TasksPresenterImplTest {
 
     @Test
     fun `updateTask() correct task passed`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        whenever(mockRepository.updateTask(any())).thenReturn(Completable.complete())
+        whenever(mockRepository.updateTask(any())).thenReturn(Maybe.just(0))
 
         SUT.updateTask(expectedTask)
 
@@ -168,9 +169,9 @@ class TasksPresenterImplTest {
 
     @Test
     fun `updateTask() success onTaskUpdated() called`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        whenever(mockRepository.updateTask(any())).thenReturn(Completable.complete())
+        whenever(mockRepository.updateTask(any())).thenReturn(Maybe.just(0))
 
         SUT.updateTask(expectedTask)
 
@@ -185,10 +186,10 @@ class TasksPresenterImplTest {
 
     @Test
     fun `updateTask() failure onError() called`() {
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedErrorMessage = "Cannot update the task!"
 
-        whenever(mockRepository.updateTask(any())).thenReturn(Completable.error(Throwable(expectedErrorMessage)))
+        whenever(mockRepository.updateTask(any())).thenReturn(Maybe.error(Throwable(expectedErrorMessage)))
 
         SUT.updateTask(testTask)
 
@@ -203,9 +204,9 @@ class TasksPresenterImplTest {
     // deleteTask correct task passed success
     @Test
     fun `deleteTask() correct task passed`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        whenever(mockRepository.deleteTask(any())).thenReturn(Completable.complete())
+        whenever(mockRepository.deleteTask(any())).thenReturn(Maybe.just(0))
 
         SUT.deleteTask(expectedTask)
 
@@ -218,9 +219,9 @@ class TasksPresenterImplTest {
 
     @Test
     fun `deleteTask() success onTaskDeleted() called`() {
-        val expectedTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val expectedTask = Task("Do homework", false)
 
-        whenever(mockRepository.deleteTask(any())).thenReturn(Completable.complete())
+        whenever(mockRepository.deleteTask(any())).thenReturn(Maybe.just(0))
 
         SUT.deleteTask(expectedTask)
 
@@ -235,10 +236,10 @@ class TasksPresenterImplTest {
 
     @Test
     fun `deleteTask() failure onError() called`() {
-        val testTask = Task("Do homework", false, System.currentTimeMillis(), System.currentTimeMillis())
+        val testTask = Task("Do homework", false)
         val expectedErrorMessage = "Cannot update the task!"
 
-        whenever(mockRepository.deleteTask(any())).thenReturn(Completable.error(Throwable(expectedErrorMessage)))
+        whenever(mockRepository.deleteTask(any())).thenReturn(Maybe.error(Throwable(expectedErrorMessage)))
 
         SUT.deleteTask(testTask)
 

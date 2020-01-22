@@ -8,7 +8,7 @@ import me.seishin.taskist.data.entities.Task
 
 class AppDatabase (context: Context) {
 
-    @androidx.room.Database(entities = [Task::class], version = 1)
+    @androidx.room.Database(entities = [Task::class], version = 1, exportSchema = false)
     abstract class Database: RoomDatabase() {
         abstract fun tasksDao(): TasksDao
     }

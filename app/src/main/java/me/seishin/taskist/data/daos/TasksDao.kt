@@ -1,10 +1,6 @@
 package me.seishin.taskist.data.daos
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import io.reactivex.Completable
+import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -16,15 +12,15 @@ interface TasksDao {
     @Query("SELECT * FROM table_tasks WHERE id == :id")
     fun getTask(id: Int): Single<Task>
 
-    @Insert
-    fun createTask(task: Task): Completable
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun createTask(task: Task): Maybe<Long>
 
-    @Insert
-    fun updateTask(task: Task): Completable
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateTask(task: Task): Maybe<Int>
 
     @Delete
-    fun deleteTask(task: Task): Completable
+    fun deleteTask(task: Task): Maybe<Int>
 
-    @Query("SELECT * FROM table_tasks")
+    @Query("SELECT * FROM table_tasks ORDER BY isChecked ASC")
     fun getAllTasks(): Flowable<List<Task>>
 }

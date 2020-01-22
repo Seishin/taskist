@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".TaskistApp">
-        <activity android:name=".ui.tasks.TasksListActivity">
+        <activity android:name=".ui.tasks.ui.TasksListActivity" android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
