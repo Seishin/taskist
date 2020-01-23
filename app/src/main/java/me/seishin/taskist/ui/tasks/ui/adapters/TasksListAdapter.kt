@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.layout_task_view.view.*
 import me.seishin.taskist.R
 import me.seishin.taskist.data.entities.Task
 
-class TasksListAdapter (private val listener: OnTaskChangeListener): RecyclerView.Adapter<TasksListAdapter.ViewHolder>() {
+class TasksListAdapter (private val listener: TaskActionsListener): RecyclerView.Adapter<TasksListAdapter.ViewHolder>() {
 
     private val data = arrayListOf<Task>()
 
@@ -19,7 +19,7 @@ class TasksListAdapter (private val listener: OnTaskChangeListener): RecyclerVie
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val task = data[position]
 
-        holder.itemView.checkbox.text = task.title
+        holder.itemView.title.text = task.title
         holder.itemView.checkbox.setOnCheckedChangeListener { _, isChecked ->
             if (task.isChecked == isChecked) return@setOnCheckedChangeListener
 
@@ -27,6 +27,10 @@ class TasksListAdapter (private val listener: OnTaskChangeListener): RecyclerVie
             listener.updateTaskRequest(task)
         }
         holder.itemView.checkbox.isChecked = task.isChecked
+
+        holder.itemView.setOnClickListener {
+            listener.onTaskTapAction(task)
+        }
     }
 
     override fun getItemCount() = data.size

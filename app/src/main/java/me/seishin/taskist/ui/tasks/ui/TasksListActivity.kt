@@ -8,16 +8,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import me.seishin.taskist.R
 import me.seishin.taskist.data.entities.Task
 import me.seishin.taskist.ui.tasks.TasksContract
-import me.seishin.taskist.ui.tasks.ui.adapters.OnTaskChangeListener
+import me.seishin.taskist.ui.tasks.ui.adapters.TaskActionsListener
 import me.seishin.taskist.ui.tasks.ui.adapters.TasksListAdapter
 import org.koin.androidx.scope.currentScope
 import org.koin.core.parameter.parametersOf
 
-class TasksListActivity : AppCompatActivity(), TasksContract.TasksView, OnTaskChangeListener {
+class TasksListActivity : AppCompatActivity(), TasksContract.TasksView, TaskActionsListener {
 
     private val presenter: TasksContract.TasksPresenter by currentScope.inject { parametersOf(this@TasksListActivity)}
     private val tasksAdapter: TasksListAdapter by currentScope.inject { parametersOf(this) }
-    private val createTaskBottomSheet: CreateTaskBottomSheet by currentScope.inject()
+
+    private var manageTaskBottomSheet: ManageTaskBottomSheet? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,14 +32,9 @@ class TasksListActivity : AppCompatActivity(), TasksContract.TasksView, OnTaskCh
         tasksList.adapter = tasksAdapter
 
         add.setOnClickListener {
-            createTaskBottomSheet.show(supportFragmentManager, createTaskBottomSheet.tag)
+            manageTaskBottomSheet = ManageTaskBottomSheet(presenter)
+            manageTaskBottomSheet?.let { it.show(supportFragmentManager, it.tag) }
         }
-
-        initCreateTaskBottomSheet()
-    }
-
-    private fun initCreateTaskBottomSheet() {
-
     }
 
     override fun onResume() {
@@ -60,13 +56,15 @@ class TasksListActivity : AppCompatActivity(), TasksContract.TasksView, OnTaskCh
     }
 
     override fun onTaskCreated() {
-        createTaskBottomSheet.dismiss()
+        manageTaskBottomSheet?.dismiss()
     }
 
     override fun onTaskUpdated(task: Task) {
+        manageTaskBottomSheet?.dismiss()
     }
 
     override fun onTaskDeleted(task: Task) {
+        manageTaskBottomSheet?.dismiss()
     }
 
     override fun onError(message: String) {
@@ -79,5 +77,10 @@ class TasksListActivity : AppCompatActivity(), TasksContract.TasksView, OnTaskCh
 
     override fun deleteTaskRequest(task: Task) {
 
+    }
+
+    override fun onTaskTapAction(task: Task) {
+        manageTaskBottomSheet = ManageTaskBottomSheet(presenter, task)
+        manageTaskBottomSheet?.let { it.show(supportFragmentManager, it.tag) }
     }
 }

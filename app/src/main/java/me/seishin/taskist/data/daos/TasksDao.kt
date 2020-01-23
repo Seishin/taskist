@@ -21,6 +21,6 @@ interface TasksDao {
     @Delete
     fun deleteTask(task: Task): Maybe<Int>
 
-    @Query("SELECT * FROM table_tasks ORDER BY isChecked ASC")
+    @Query("SELECT * FROM table_tasks ORDER BY isChecked ASC, createdAt DESC")
     fun getAllTasks(): Flowable<List<Task>>
 }
