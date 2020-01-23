@@ -10,12 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".TaskistApp">
-        <activity android:name=".ui.tasks.ui.TasksListActivity" android:windowSoftInputMode="adjustResize">
+        <activity android:name=".ui.tasks.ui.TasksListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

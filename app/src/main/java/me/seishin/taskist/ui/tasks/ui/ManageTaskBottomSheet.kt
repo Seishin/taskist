@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import me.seishin.taskist.R
 import me.seishin.taskist.data.entities.Task
@@ -17,6 +18,11 @@ class ManageTaskBottomSheet (private val presenter: TasksContract.TasksPresenter
     private var doneButton: Button? = null
     private var deleteButton: Button? = null
     private var titleField: EditText? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.ManageTaskBottomSheetDialog)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_manage_task_sheet, container, false)
