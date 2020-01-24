@@ -47,3 +47,5 @@ captures/
 
 ### Android Patch ###
 gen-external-apklibs
+
+google-services.json
