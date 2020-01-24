@@ -49,3 +49,6 @@ captures/
 gen-external-apklibs
 
 google-services.json
+app/release/
+*.pepk
+keystore
