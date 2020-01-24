@@ -54,57 +54,6 @@ class TasksPresenterImplTest {
     }
 
     @Test
-    fun `getTask() correct id passed`() {
-        val expectedTaskId = 0
-
-        whenever(mockRepository.getTask(any())).thenReturn(Single.never())
-
-        SUT.getTask(expectedTaskId)
-
-        argumentCaptor<Int>().apply {
-            verify(mockRepository, times(1)).getTask(capture())
-            assertEquals(expectedTaskId, firstValue)
-        }
-    }
-
-    @Test
-    fun `getTask() success onTaskObtained() called`() {
-        val expectedTaskId = 0
-        val expectedTask = Task( "Do homework", false)
-        expectedTask.id = expectedTaskId.toLong()
-
-        whenever(mockRepository.getTask(any())).thenReturn(Single.just(expectedTask))
-
-        SUT.getTask(expectedTaskId.toInt())
-
-        argumentCaptor<Int>().apply {
-            verify(mockRepository, times(1)).getTask(capture())
-            assertEquals(expectedTaskId, firstValue)
-        }
-
-        argumentCaptor<Task>().apply {
-            verify(mockView, times(1)).onTaskObtained(capture())
-            assertEquals(expectedTask, firstValue)
-        }
-    }
-
-    @Test
-    fun `getTask() failure onError() called`() {
-        val expectedErrorMessage = "Cannot obtain this task!"
-
-        whenever(mockRepository.getTask(any())).thenReturn(Single.error(Throwable(expectedErrorMessage)))
-
-        SUT.getTask(0)
-
-        argumentCaptor<String>().apply {
-            verify(mockRepository, times(1)).getTask(any())
-            verify(mockView, times(1)).onError(capture())
-
-            assertEquals(expectedErrorMessage, firstValue)
-        }
-    }
-
-    @Test
     fun `createTask() correct task passed`() {
         val expectedTask = Task("Do homework", false)
 

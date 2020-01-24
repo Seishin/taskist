@@ -3,4 +3,9 @@
     <string name="delete">Delete</string>
     <string name="hint_task">Add task</string>
     <string name="done">Done</string>
+    <string name="action_undo">UNDO</string>
+    <string name="message_task_deleted">Task deleted</string>
+    <string name="title_main_screen">My Tasks</string>
+    <string name="title_empty_state">No Tasks!</string>
+    <string name="body_empty_state">Be organized! Add your first task now.</string>
 </resources>

@@ -13,5 +13,4 @@ interface TasksRepository {
     fun createTask(task: Task): Maybe<Long>
     fun updateTask(task: Task): Maybe<Int>
     fun deleteTask(task: Task): Maybe<Int>
-    fun filterTaskBy(filter: Filter): Flowable<List<Task>>
 }

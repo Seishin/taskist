@@ -4,7 +4,6 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import me.seishin.taskist.common.Filter
 import me.seishin.taskist.data.AppDatabase
 import me.seishin.taskist.data.entities.Task
 
@@ -31,9 +30,5 @@ class TasksRepositoryImpl (
 
     override fun deleteTask(task: Task): Maybe<Int> {
         return db.tasksDao().deleteTask(task).subscribeOn(subscribeScheduler).observeOn(observeScheduler)
-    }
-
-    override fun filterTaskBy(filter: Filter): Flowable<List<Task>> {
-        return Flowable.empty()
     }
 }

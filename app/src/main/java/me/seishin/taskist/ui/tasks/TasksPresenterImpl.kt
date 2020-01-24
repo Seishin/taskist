@@ -18,15 +18,6 @@ class TasksPresenterImpl(private val view: TasksContract.TasksView, private val 
         compositeDisposable.add(subscription)
     }
 
-    override fun getTask(id: Int) {
-        val subscription = repository.getTask(id).subscribe({
-            view.onTaskObtained(it)
-        }, {
-            it.message?.let { msg -> view.onError(msg) }
-        })
-        compositeDisposable.add(subscription)
-    }
-
     override fun createTask(task: Task) {
         val subscription = repository.createTask(task).subscribe({ id ->
             task.id = id
@@ -53,9 +44,6 @@ class TasksPresenterImpl(private val view: TasksContract.TasksView, private val 
             it.message?.let { msg -> view.onError(msg) }
         })
         compositeDisposable.add(subscription)
-    }
-
-    override fun filterTasks(filter: Filter) {
     }
 
     override fun onStop() {
